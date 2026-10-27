@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>SmartEvac · Evacuación inteligente ante sismos</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <header>
+          <h1>SmartEvac · Evacuación inteligente ante sismos</h1>
+          <p>
+            Plataforma BI + Machine Learning en 7 etapas · datos simulados del
+            proyecto (Lima y Callao)
+          </p>
+        </header>
+        <nav id="nav"></nav>
+      </aside>
+      <main>
+        <section id="s1">
+          <h2><span>1</span>Fuentes de datos</h2>
+          <p class="sub">
+            Sube los 5 CSV (trafico, sismico, evacuacion, infraestructura,
+            dim_evento) y las etapas 2 a 7 se calculan con tus archivos.
+          </p>
+          <div class="f">
+            <input type="file" id="up" accept=".csv" multiple /><button
+              id="ex"
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid var(--bd);
+                background: var(--li);
+                color: var(--pr);
+                font: inherit;
+                font-weight: 600;
+                cursor: pointer;
+              "
+            >
+              Usar datos de ejemplo
+            </button>
+          </div>
+          <p class="sub" id="upm">
+            Mostrando los datos de ejemplo del proyecto.
+          </p>
+          <div class="g" id="src"></div>
+        </section>
+        <section id="s2">
+          <h2><span>2</span>Staging area</h2>
+          <p class="sub">
+            Los CSV crudos son la landing zone; antes de cargar se validan.
+          </p>
+          <div class="g" id="stg"></div>
+        </section>
+        <section id="s3">
+          <h2><span>3</span>Proceso ETL</h2>
+          <p class="sub">
+            Extract → Transform → Load, con las reglas de negocio del proyecto.
+          </p>
+          <table>
+            <tr>
+              <th>Regla</th>
+              <th>Definición</th>
+            </tr>
+            <tr>
+              <td>Congestión</td>
+              <td>
+                <code>ALTA</code> &lt; 10 km/h · <code>MEDIA</code> &lt; 25 ·
+                <code>BAJA</code> ≥ 25
+              </td>
+            </tr>
+            <tr>
+              <td>Alerta sísmica</td>
+              <td>
+                <code>ALTO</code> ≥ 6.0 · <code>MEDIO</code> ≥ 4.5 ·
+                <code>BAJO</code> en otro caso
+              </td>
+            </tr>
+            <tr>
+              <td>Índice de riesgo</td>
+              <td><code>tiempo_evacuacion / capacidad_ruta</code></td>
+            </tr>
+            <tr>
+              <td>Clave de tiempo</td>
+              <td>
+                Posición de cada fecha única, ordenada, entre todas las fuentes
+              </td>
+            </tr>
+          </table>
+        </section>
+        <section id="s4">
+          <h2><span>4</span>Data warehouse</h2>
+          <p class="sub">
+            Esquema estrella extendido en SQL Server:
+            <b>LY_DW_EvacuacionInteligente</b>.
+          </p>
+          <div class="g" id="dw"></div>
+        </section>
+        <section id="s5">
+          <h2><span>5</span>Capa de IA</h2>
+          <p class="sub">
+            Cuatro modelos entrenados en Google Colab (escenario: sismo de
+            magnitud 7.0).
+          </p>
+          <div class="g" id="ml"></div>
+          <p class="sub" style="margin-top: 10px">
+            Los datos son simulados con relaciones simples, por eso las métricas
+            son moderadas: validan el flujo, no sirven para decidir en campo.
+          </p>
+        </section>
+        <section id="s6">
+          <h2><span>6</span>Capa semántica (KPIs)</h2>
+          <p class="sub">Medidas y metas que consume el dashboard.</p>
+          <table id="kt"></table>
+        </section>
+        <section id="s7">
+          <h2><span>7</span>Visualización BI · dashboard ejecutivo</h2>
+          <p class="sub">
+            Cambia los filtros: los KPIs, las predicciones y los gráficos se
+            recalculan.
+          </p>
+          <div class="f">
+            <input
+              id="pbu"
+              placeholder="Pega aquí el enlace de Power BI (Publicar en la web)"
+              aria-label="Enlace de Power BI"
+            /><button id="pbb" class="btn">Cargar Power BI</button
+            ><button id="pbd" class="btn">Descargar predicciones (CSV)</button>
+          </div>
+          <p class="sub bad" id="pbm"></p>
+          <div id="pbf"></div>
+          <div class="f">
+            <select id="fd" aria-label="Distrito"></select
+            ><select id="fz" aria-label="Zona"></select>
+          </div>
+          <div class="g" id="k"></div>
+          <h3 style="margin: 14px 0 6px; color: var(--pr); font-size: 15px">
+            Predicciones de IA
+          </h3>
+          <div class="g" id="p"></div>
+          <div
+            class="g"
+            style="
+              margin-top: 14px;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            "
+          >
+            <div class="ch">
+              <h3>Histograma · registros por tiempo de evacuación (min)</h3>
+              <div id="h"></div>
+            </div>
+            <div class="ch">
+              <h3>Circular · tráfico por nivel de congestión</h3>
+              <div id="pie"></div>
+            </div>
+            <div class="ch">
+              <h3>Lineal · vehículos detectados por semana</h3>
+              <div id="ln"></div>
+            </div>
+            <div class="ch">
+              <h3>Tabla ranking · zonas por índice de riesgo IA</h3>
+              <div id="rk"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
